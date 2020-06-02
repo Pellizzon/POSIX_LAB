@@ -21,6 +21,20 @@ void sigint_handler(int num)
     }
 }
 
+void select_color(i)
+{
+    switch (i)
+    {
+    case 0:
+
+        break;
+
+    default:
+        printf("\033[0;36m");
+        break;
+    }
+}
+
 int main(int argc, char *argv[])
 {
     struct sigaction s;
@@ -54,7 +68,7 @@ int main(int argc, char *argv[])
                 }
                 clock_t end = clock();
                 double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-                printf("(%lfs)\n", time_spent);
+                printf(" (%lfs)\n", time_spent);
                 return 1; //fail
             }
         }
@@ -83,12 +97,13 @@ int main(int argc, char *argv[])
             {
                 clock_t end = clock();
                 double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-                printf("%s: [PASS] (%lfs)\n", all_tests[i].name, time_spent);
+                printf("%s: \033[0;32m[PASS]\033[0m (%lfs)\n", all_tests[i].name, time_spent);
+
                 return 0; //success
             }
             clock_t end = clock();
             double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-            printf("(%lfs)\n", time_spent);
+            printf(" (%lfs)\n", time_spent);
             return 1; //fail
         }
         v[i] = filho;
@@ -101,11 +116,11 @@ int main(int argc, char *argv[])
         dup2(fd[i], 1);
         if (WTERMSIG(status) == 14)
         {
-            printf("%s: [TIME] %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
+            printf("%s: \033[0;36m[TIME]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
             //duvida -> retorna 0...
         }
         else if (WIFSIGNALED(status))
-            printf("%s: [ERRO] %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
+            printf("%s: \033[0;31m[ERRO]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
         else
         {
             pass_count++;

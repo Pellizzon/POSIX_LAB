@@ -13,13 +13,13 @@ typedef struct
     (printf("%s: ", __func__)); \
     printf
 
-#define test_assert(expr, str)                                                     \
-    {                                                                              \
-        if (!(expr))                                                               \
-        {                                                                          \
-            printf("%s: [FAIL] %s in %s:%d\n", __func__, str, __FILE__, __LINE__); \
-            return 1;                                                              \
-        }                                                                          \
+#define test_assert(expr, str)                                                                    \
+    {                                                                                             \
+        if (!(expr))                                                                              \
+        {                                                                                         \
+            printf("%s: \033[0;35m[FAIL]\033[0m %s in %s:%d", __func__, str, __FILE__, __LINE__); \
+            return 1;                                                                             \
+        }                                                                                         \
     }
 
 #define TEST(f)                   \

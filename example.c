@@ -51,8 +51,7 @@ int test_longo()
 
 int test_segmentation()
 {
-    int v[1] = {0};
-    int j = v[5];
+    *(int *)0 = 0;
     return 0;
 }
 
@@ -75,7 +74,7 @@ int test_lento()
 //              TEST(test_loop), TEST(test_longo), TEST(test_segmentation),
 //              TEST(test_rapido), TEST(test_lento)};
 
-test_list = {TEST(test1), TEST(test2), TEST(test3), TEST(test_div0),
-             TEST(test_longo), TEST(test_loop)};
+test_list = {TEST(test1), TEST(test2), TEST(test3), TEST(test_segmentation),
+             TEST(test_loop)};
 
 #include "mintest/runner.h"

@@ -21,20 +21,6 @@ void sigint_handler(int num)
     }
 }
 
-void select_color(i)
-{
-    switch (i)
-    {
-    case 0:
-
-        break;
-
-    default:
-        printf("\033[0;36m");
-        break;
-    }
-}
-
 int main(int argc, char *argv[])
 {
     struct sigaction s;
@@ -75,7 +61,7 @@ int main(int argc, char *argv[])
     }
 
     char buffer[10];
-    pid_t v[size];
+    pid_t filhos[size];
     int fd[size];
     int saved_stdout = dup(1);
 
@@ -106,12 +92,12 @@ int main(int argc, char *argv[])
             printf(" (%lfs)\n", time_spent);
             return 1; //fail
         }
-        v[i] = filho;
+        filhos[i] = filho;
     }
 
     //espera todos os filhos terminarem e verifica o status de cada um
     int i = 0;
-    while (wait(&status) > 0)
+    while (waitpid(filhos[i], &status, 0) > 0)
     {
         dup2(fd[i], 1);
         if (WTERMSIG(status) == 14)
@@ -121,7 +107,7 @@ int main(int argc, char *argv[])
         }
         else if (WIFSIGNALED(status))
             printf("%s: \033[0;31m[ERRO]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
-        else
+        else if (!WEXITSTATUS(status))
         {
             pass_count++;
         }
@@ -138,6 +124,7 @@ int main(int argc, char *argv[])
         {
             printf("%c", buf[0]);
         }
+        close(fd[i]); //dúvida se tenho que fechar os temps
     }
 
     printf("\n=====================\n");

@@ -37,9 +37,9 @@ int test_loop()
 
 int test_longo()
 {
-    for (int i = 0; i < 270; i++)
+    for (int i = 0; i < 250; i++)
     {
-        for (int j = 0; j < 270; j++)
+        for (int j = 0; j < 250; j++)
         {
             for (int k = 0; k < i * j; k++)
             {
@@ -70,11 +70,11 @@ int test_lento()
     }
 }
 
-// test_list = {TEST(test1), TEST(test2), TEST(test3), TEST(test_div0),
-//              TEST(test_loop), TEST(test_longo), TEST(test_segmentation),
-//              TEST(test_rapido), TEST(test_lento)};
+test_list = {TEST(test1), TEST(test2), TEST(test3), TEST(test_div0),
+             TEST(test_loop), TEST(test_longo), TEST(test_segmentation),
+             TEST(test_rapido), TEST(test_lento)};
 
-test_list = {TEST(test1), TEST(test2), TEST(test3), TEST(test_segmentation),
-             TEST(test_loop)};
+// test_list = {TEST(test1), TEST(test2), TEST(test3), TEST(test_segmentation),
+//              TEST(test_loop), TEST(test_div0), TEST(test_lento), TEST(test_rapido)};
 
 #include "mintest/runner.h"

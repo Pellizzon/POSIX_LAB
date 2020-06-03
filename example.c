@@ -70,9 +70,18 @@ int test_lento()
     }
 }
 
+int test_prints()
+{
+    for (int i = 0; i < 40; i++)
+    {
+        printf("varios prints\n");
+    }
+    return 0;
+}
+
 test_list = {TEST(test1), TEST(test2), TEST(test3), TEST(test_div0),
              TEST(test_loop), TEST(test_longo), TEST(test_segmentation),
-             TEST(test_rapido), TEST(test_lento)};
+             TEST(test_rapido), TEST(test_lento), TEST(test_prints)};
 
 // test_list = {TEST(test1), TEST(test2), TEST(test3), TEST(test_segmentation),
 //              TEST(test_loop), TEST(test_div0), TEST(test_lento), TEST(test_rapido)};

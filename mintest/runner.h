@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <time.h>
 
+int status_int = 0;
 void sigint_handler(int num)
 {
     printf("\nVocê deseja mesmo sair [s/n]? ");
@@ -65,30 +66,27 @@ int main(int argc, char *argv[])
     int fd[size];
     int saved_stdout = dup(1);
 
-    printf("Running %d tests:\n", size);
-    printf("=====================\n\n");
-
     for (int i = 0; i < size; i++)
     {
         fd[i] = open("/tmp", O_RDWR | O_TMPFILE);
-
         pid_t filho = fork();
 
         if (filho == 0)
         {
             alarm(2);
-            dup2(fd[i], 1);
             clock_t begin = clock();
             if (all_tests[i].function() == 0)
             {
                 clock_t end = clock();
                 double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+                dup2(fd[i], 1);
                 printf("%s: \033[0;32m[PASS]\033[0m (%lfs)\n", all_tests[i].name, time_spent);
 
                 return 0; //success
             }
             clock_t end = clock();
             double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+            dup2(fd[i], 1);
             printf(" (%lfs)\n", time_spent);
             return 1; //fail
         }
@@ -99,6 +97,7 @@ int main(int argc, char *argv[])
     int i = 0;
     while (waitpid(filhos[i], &status, 0) > 0)
     {
+        printf("\r"); //se nao tiver isso, desorganiza a saída ???
         dup2(fd[i], 1);
         if (WTERMSIG(status) == 14)
         {
@@ -116,6 +115,8 @@ int main(int argc, char *argv[])
 
     //lê todos .temp e printa as saidas de forma organizada
     dup2(saved_stdout, 1);
+    printf("\nRunning %d tests:\n", size);
+    printf("=====================\n\n");
     for (int i = 0; i < size; i++)
     {
         char buf[1];
@@ -124,10 +125,19 @@ int main(int argc, char *argv[])
         {
             printf("%c", buf[0]);
         }
-        close(fd[i]); //dúvida se tenho que fechar os temps
+        // close(fd[i]); //dúvida se tenho que fechar os temps
     }
 
     printf("\n=====================\n");
     printf("%d/%d tests passed\n", pass_count, size);
     return 0;
 }
+
+//duvidas:
+//desordenacao se tirar o print da linha 100
+//linha 128
+//ctrl+c => STOP ao inves de exit()
+//duvida linha 105
+//duvida teste faca muito trabalho
+//duvida teste q falhe e passe no mesmo assert
+//muitos prints são quantos

@@ -1,5 +1,6 @@
 #include "mintest/macros.h"
 #include <unistd.h>
+#include <time.h>
 
 int test1()
 {
@@ -37,9 +38,9 @@ int test_loop()
 
 int test_longo()
 {
-    for (int i = 0; i < 250; i++)
+    for (int i = 0; i < 260; i++)
     {
-        for (int j = 0; j < 250; j++)
+        for (int j = 0; j < 260; j++)
         {
             for (int k = 0; k < i * j; k++)
             {
@@ -74,16 +75,21 @@ int test_prints()
 {
     for (int i = 0; i < 40; i++)
     {
-        printf("varios prints\n");
+        test_printf("varios prints\n");
     }
+    return 0;
+}
+
+int test_rand()
+{
+    srand(time(NULL));
+    test_assert(rand() % 10 < 6, "Valor maior que 5");
     return 0;
 }
 
 test_list = {TEST(test1), TEST(test2), TEST(test3), TEST(test_div0),
              TEST(test_loop), TEST(test_longo), TEST(test_segmentation),
-             TEST(test_rapido), TEST(test_lento), TEST(test_prints)};
-
-// test_list = {TEST(test1), TEST(test2), TEST(test3), TEST(test_segmentation),
-//              TEST(test_loop), TEST(test_div0), TEST(test_lento), TEST(test_rapido)};
+             TEST(test_rapido), TEST(test_lento), TEST(test_prints),
+             TEST(test_rand)};
 
 #include "mintest/runner.h"

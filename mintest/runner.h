@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     double start, stop;
 
     //Executa um único teste passado como argumento
-    if (argv[1] != NULL)
+    if (argc == 2)
     {
         for (int i = 0; i < size; i++)
         {

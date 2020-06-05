@@ -17,14 +17,17 @@ esse teste pode passar ou falhar toda vez que rodado o programa.
 Implementação runner:
 
 Basicamente, o programa é iniciado e verifica os argumentos passados.
+
 Caso não seja passado nenhum argumento, roda todos os testes, caso contrário, 
 roda o teste especificado.
 
 Para o teste especificado:
+
     - verifica se argc é igual a 2 ("./programa" e "teste a ser rodado");
     - se não for igual a dois (ou seja não passar argumento ou passar mais de 
     um argumento), todos os testes são rodados;
     -se não for igual a 2, apenas o teste passado como argumento:
+
         verifica-se a string argumento e a compara com o nome dos testes num for,
         executando apenas aquela que possui nome = argumento.
 
@@ -36,17 +39,23 @@ Rodando todos os testes:
     no qual cada processo filho irá rodar um teste diferente (filho1 roda test1,
     filho2 roda test2, etc.). Cada programa filho escreve a saída do programa em um
     arquivo temporário, cujo file descriptor é armazenado em um vetor de fds. 
+
     Além disso, cada processo filho possui 2 segundos para completar o teste. Caso
     não complete, o filho recebe um SIGALRM, terminando a execução dele.
+
     As saídas dos processos filho padrão são:
+
         - 0: completou o teste e passou, printando [PASS];
         - 1: completou o teste e falhou, printando [FAIL];
+
     Além disso, é indicado o tempo levado para a execução do teste, que é impresso
     logo após o status/mensagem de por que falhou.
 
     No processo pai, vale destacar, ainda, que os pids dos processos filhos são armazenados em um 
     vetor de filhos.
+
     O processo pai espera o término de cada um dos seus filhos, e para cada filho:
+
         - espera finalização de sua execução e obtem seu status.
         - Caso possui algum erro, escreve no arquivo temporario desse filho (por isso
         o vetor com os fds) o erro.

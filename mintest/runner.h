@@ -106,9 +106,9 @@ int main(int argc, char *argv[])
         }
         else if (WIFSIGNALED(status))
             printf("%s: \033[0;31m[ERRO]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
-        else if (!WEXITSTATUS(status))
+        if (WIFEXITED(status))
         {
-            pass_count++;
+            pass_count += !WEXITSTATUS(status);
         }
         i++;
     }

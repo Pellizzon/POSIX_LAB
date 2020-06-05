@@ -26,7 +26,7 @@ Para o teste especificado:
     - verifica se argc é igual a 2 ("./programa" e "teste a ser rodado");
     - se não for igual a dois (ou seja não passar argumento ou passar mais de 
     um argumento), todos os testes são rodados;
-    -se não for igual a 2, apenas o teste passado como argumento:
+    - se não for igual a 2, apenas o teste passado como argumento:
 
         verifica-se a string argumento e a compara com o nome dos testes num for,
         executando apenas aquela que possui nome = argumento.

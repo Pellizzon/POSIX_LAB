@@ -73,7 +73,7 @@ int test_lento()
 
 int test_prints()
 {
-    for (int i = 0; i < 40; i++)
+    for (int i = 0; i < 1000; i++)
     {
         test_printf("varios prints\n");
     }
@@ -87,9 +87,8 @@ int test_rand()
     return 0;
 }
 
-test_list = {TEST(test1), TEST(test2), TEST(test3), TEST(test_div0),
+test_list = {TEST(test_prints), TEST(test1), TEST(test2), TEST(test3), TEST(test_div0),
              TEST(test_loop), TEST(test_longo), TEST(test_segmentation),
-             TEST(test_rapido), TEST(test_lento), TEST(test_prints),
-             TEST(test_rand)};
+             TEST(test_rapido), TEST(test_lento), TEST(test_rand)};
 
 #include "mintest/runner.h"

@@ -117,10 +117,11 @@ int main(int argc, char *argv[])
     dup2(saved_stdout, 1);
     printf("\nRunning %d tests:\n", size);
     printf("=====================\n\n");
+    char buf[1];
     for (int i = 0; i < size; i++)
     {
-        char buf[1];
         lseek(fd[i], 0, SEEK_SET);
+
         while ((read(fd[i], buf, 1)) > 0)
         {
             printf("%c", buf[0]);

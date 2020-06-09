@@ -82,6 +82,7 @@ int test_prints()
 
 int test_rand()
 {
+    test_printf("Teste aleatório\n");
     srand(time(NULL));
     test_assert(rand() % 10 < 6, "Valor maior que 5");
     return 0;

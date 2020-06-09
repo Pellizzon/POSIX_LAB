@@ -10,16 +10,28 @@
 #include <fcntl.h>
 #include <time.h>
 
-int status_int = 0;
+int int_signal = 0;
 void sigint_handler(int num)
 {
-    printf("\nVocê deseja mesmo sair [s/n]? ");
-    char c;
-    scanf("%c", &c);
-    if (c == 's')
+    printf("Status int: %d", int_signal);
+    if (!int_signal)
     {
-        exit(0);
+        printf("\nVocê deseja mesmo sair [s/n]? ");
+        char c;
+        scanf("%c", &c);
+        if (c == 's')
+        {
+            int_signal = 1;
+            //exit(0);
+        }
     }
+
+    struct sigaction s;
+    s.sa_handler = SIG_DFL;
+    sigemptyset(&s.sa_mask);
+    s.sa_flags = 0;
+
+    sigaction(SIGINT, &s, NULL);
 }
 
 int main(int argc, char *argv[])
@@ -51,19 +63,18 @@ int main(int argc, char *argv[])
                     clock_t end = clock();
                     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
                     printf("%s: \033[0;32m[PASS]\033[0m (%lfs)\n", all_tests[i].name, time_spent);
-                    return 0; //success
+                    return 0;
                 }
                 clock_t end = clock();
                 double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
                 printf(" (%lfs)\n", time_spent);
-                return 1; //fail
+                return 1;
             }
         }
     }
 
-    char buffer[10];
-    pid_t filhos[size];
-    int fd[size];
+    pid_t *filhos = malloc(sizeof(pid_t) * size);
+    int *fd = malloc(sizeof(int) * size);
     int saved_stdout = dup(1);
 
     for (int i = 0; i < size; i++)
@@ -74,35 +85,39 @@ int main(int argc, char *argv[])
         if (filho == 0)
         {
             alarm(2);
+            dup2(fd[i], 1);
             clock_t begin = clock();
             if (all_tests[i].function() == 0)
             {
                 clock_t end = clock();
                 double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-                dup2(fd[i], 1);
                 printf("%s: \033[0;32m[PASS]\033[0m (%lfs)\n", all_tests[i].name, time_spent);
-
-                return 0; //success
+                return 0;
             }
             clock_t end = clock();
             double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-            dup2(fd[i], 1);
             printf(" (%lfs)\n", time_spent);
-            return 1; //fail
+            return 1;
         }
         filhos[i] = filho;
     }
+
+    // int j = 0;
+    // while (waitpid(filhos[j], &status, WNOHANG) == 0 && int_signal)
+    // {
+    //     kill(filhos[j], SIGINT);
+    //     j++;
+    // }
 
     //espera todos os filhos terminarem e verifica o status de cada um
     int i = 0;
     while (waitpid(filhos[i], &status, 0) > 0)
     {
-        printf("\r"); //se nao tiver isso, desorganiza a saída ???
+        printf("\r");
         dup2(fd[i], 1);
         if (WTERMSIG(status) == 14)
         {
             printf("%s: \033[0;36m[TIME]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
-            //duvida -> retorna 0...
         }
         else if (WIFSIGNALED(status))
             printf("%s: \033[0;31m[ERRO]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
@@ -126,19 +141,10 @@ int main(int argc, char *argv[])
         {
             printf("%c", buf[0]);
         }
-        // close(fd[i]); //dúvida se tenho que fechar os temps
+        close(fd[i]);
     }
 
     printf("\n=====================\n");
     printf("%d/%d tests passed\n", pass_count, size);
     return 0;
 }
-
-//duvidas:
-//desordenacao se tirar o print da linha 100
-//linha 128
-//ctrl+c => STOP ao inves de exit()
-//duvida linha 105
-//duvida teste faca muito trabalho
-//duvida teste q falhe e passe no mesmo assert
-//muitos prints são quantos

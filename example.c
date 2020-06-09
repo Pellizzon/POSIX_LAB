@@ -40,6 +40,7 @@ int test_loop()
 
 int test_longo()
 {
+    test_printf("Teste bem longo que termina\n");
     for (int i = 0; i < 260; i++)
     {
         for (int j = 0; j < 260; j++)
@@ -61,7 +62,7 @@ int test_segmentation()
 
 int test_rapido()
 {
-    test_printf("Teste for i < 5\n");
+    test_printf("Teste for i < 5 (sem sleep)\n");
     for (int i = 0; i < 5; i++)
     {
     }
@@ -70,7 +71,7 @@ int test_rapido()
 
 int test_lento()
 {
-    test_printf("Teste for i < 5 {sleep}\n");
+    test_printf("Teste for i < 5 (com sleep)\n");
     for (int i = 0; i < 5; i++)
     {
         sleep(1);

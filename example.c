@@ -25,12 +25,14 @@ int test3()
 
 int test_div0()
 {
+    test_printf("Teste divisão por zero\n");
     int i = 1 / 0;
     return 0;
 }
 
 int test_loop()
 {
+    test_printf("Teste loop\n");
     while (1)
         ;
     return 0;
@@ -52,28 +54,33 @@ int test_longo()
 
 int test_segmentation()
 {
+    test_printf("Teste segmentation fault\n");
     *(int *)0 = 0;
     return 0;
 }
 
 int test_rapido()
 {
+    test_printf("Teste for i < 5\n");
     for (int i = 0; i < 5; i++)
     {
     }
+    return 0;
 }
 
 int test_lento()
 {
+    test_printf("Teste for i < 5 {sleep}\n");
     for (int i = 0; i < 5; i++)
     {
         sleep(1);
     }
+    return 0;
 }
 
 int test_prints()
 {
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 50; i++)
     {
         test_printf("varios prints\n");
     }

@@ -77,6 +77,9 @@ int main(int argc, char *argv[])
     int *fd = malloc(sizeof(int) * size);
     int saved_stdout = dup(1);
 
+    printf("\nRunning %d tests:\n", size);
+    printf("=====================\n\n");
+
     for (int i = 0; i < size; i++)
     {
         fd[i] = open("/tmp", O_RDWR | O_TMPFILE);
@@ -130,8 +133,6 @@ int main(int argc, char *argv[])
 
     //lê todos .temp e printa as saidas de forma organizada
     dup2(saved_stdout, 1);
-    printf("\nRunning %d tests:\n", size);
-    printf("=====================\n\n");
     char buf[1];
     for (int i = 0; i < size; i++)
     {

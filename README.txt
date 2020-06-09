@@ -51,7 +51,7 @@ Rodando todos os testes:
     Além disso, é indicado o tempo levado para a execução do teste, que é impresso
     logo após o status/mensagem de por que falhou.
 
-    No processo pai, vale destacar, ainda, que os pids dos processos filhos são armazenados em um 
+    ale destacar ainda, que no processo pai, os pids dos processos filhos são armazenados em um 
     vetor de filhos.
 
     O processo pai espera o término de cada um dos seus filhos, e para cada filho:
@@ -62,10 +62,13 @@ Rodando todos os testes:
         - Caso não possua nenhum erro, o programa recebe o valor de saída (0 ou 1) e realiza ações
         de acordo:
             - se recebeu 0, o teste rodado por aquele filho passou, incrementando uma váriavel de passe;
-            - se recebeu 1, não faz nada.
+            - se recebeu 1, não faz nada, afinal o teste falhou.
 
     Após agregar todos os resultados em seus respectivos arquivos temporários, o programa lê cada um desses
-    arquivos e imprime no terminal, de maneira ordenada, os resultados dos testes obtidos anteriormente.
+    arquivos e imprime no terminal, de maneira ordenada, os resultados dos testes obtidos anteriormente:
+
+        teste_*: prints...
+        teste_*: [STATUS]
 
     Ainda, cada um dos status é impresso com uma cor diferente:
         [PASS]: verde;

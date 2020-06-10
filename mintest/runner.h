@@ -10,28 +10,15 @@
 #include <fcntl.h>
 #include <time.h>
 
-int int_signal = 0;
 void sigint_handler(int num)
 {
-    printf("Status int: %d", int_signal);
-    if (!int_signal)
+    printf("\nVocê deseja mesmo sair [s/n]? ");
+    char c;
+    scanf("%c", &c);
+    if (c == 's')
     {
-        printf("\nVocê deseja mesmo sair [s/n]? ");
-        char c;
-        scanf("%c", &c);
-        if (c == 's')
-        {
-            int_signal = 1;
-            //exit(0);
-        }
+        exit(0);
     }
-
-    struct sigaction s;
-    s.sa_handler = SIG_DFL;
-    sigemptyset(&s.sa_mask);
-    s.sa_flags = 0;
-
-    sigaction(SIGINT, &s, NULL);
 }
 
 int main(int argc, char *argv[])
@@ -104,13 +91,6 @@ int main(int argc, char *argv[])
         }
         filhos[i] = filho;
     }
-
-    // int j = 0;
-    // while (waitpid(filhos[j], &status, WNOHANG) == 0 && int_signal)
-    // {
-    //     kill(filhos[j], SIGINT);
-    //     j++;
-    // }
 
     //espera todos os filhos terminarem e verifica o status de cada um
     int i = 0;

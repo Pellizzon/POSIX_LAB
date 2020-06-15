@@ -10,25 +10,25 @@
 #include <fcntl.h>
 #include <time.h>
 
-void sigint_handler(int num)
-{
-    printf("\nVocê deseja mesmo sair [s/n]? ");
-    char c;
-    scanf("%c", &c);
-    if (c == 's')
-    {
-        exit(0);
-    }
-}
+// void sigint_handler(int num)
+// {
+//     printf("\nVocê deseja mesmo sair [s/n]? ");
+//     char c;
+//     scanf("%c", &c);
+//     if (c == 's')
+//     {
+//         exit(0);
+//     }
+// }
 
 int main(int argc, char *argv[])
 {
-    struct sigaction s;
-    s.sa_handler = sigint_handler;
-    sigemptyset(&s.sa_mask);
-    s.sa_flags = 0;
+    // struct sigaction s;
+    // s.sa_handler = sigint_handler;
+    // sigemptyset(&s.sa_mask);
+    // s.sa_flags = 0;
 
-    sigaction(SIGINT, &s, NULL);
+    // sigaction(SIGINT, &s, NULL);
 
     int size = sizeof(all_tests) / sizeof(test_data);
     int status, pass_count = 0;
@@ -43,7 +43,6 @@ int main(int argc, char *argv[])
             {
                 printf("Running %s:\n", argv[1]);
                 printf("=====================\n\n");
-                alarm(2);
                 clock_t begin = clock();
                 if (all_tests[i].function() == 0)
                 {
@@ -64,7 +63,7 @@ int main(int argc, char *argv[])
     int *fd = malloc(sizeof(int) * size);
     int saved_stdout = dup(1);
 
-    printf("\nRunning %d tests:\n", size);
+    printf("Running %d tests:\n", size);
     printf("=====================\n\n");
 
     for (int i = 0; i < size; i++)
@@ -74,10 +73,9 @@ int main(int argc, char *argv[])
 
         if (filho == 0)
         {
-            alarm(2);
             dup2(fd[i], 1);
             clock_t begin = clock();
-            if (all_tests[i].function() == 0)
+            if (all_tests[i].function() >= 0)
             {
                 clock_t end = clock();
                 double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
@@ -96,7 +94,6 @@ int main(int argc, char *argv[])
     int i = 0;
     while (waitpid(filhos[i], &status, 0) > 0)
     {
-        printf("\r");
         dup2(fd[i], 1);
         if (WTERMSIG(status) == 14)
         {

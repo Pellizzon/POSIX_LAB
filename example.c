@@ -4,12 +4,14 @@
 
 int test1()
 {
+    set_time_limit(2);
     test_printf("Hello! %d %f\n", 3, 3.14);
     return 0;
 }
 
 int test2()
 {
+    set_time_limit(2);
     test_assert(1 == 0, "This always fails!");
     printf("This never runs!\n");
     test_assert(1 == 1, "Neither this.");
@@ -18,6 +20,7 @@ int test2()
 
 int test3()
 {
+    set_time_limit(2);
     test_printf("<-- Name of the function before the printf!\n");
     test_assert(1 == 1, "This always succeeds");
     return 0;
@@ -25,6 +28,7 @@ int test3()
 
 int test_div0()
 {
+    set_time_limit(2);
     test_printf("Teste divisão por zero\n");
     int i = 1 / 0;
     return 0;
@@ -32,6 +36,7 @@ int test_div0()
 
 int test_loop()
 {
+    set_time_limit(2);
     test_printf("Teste loop\n");
     while (1)
         ;
@@ -40,10 +45,11 @@ int test_loop()
 
 int test_longo()
 {
+    set_time_limit(2);
     test_printf("Teste bem longo que termina\n");
-    for (int i = 0; i < 260; i++)
+    for (int i = 0; i < 265; i++)
     {
-        for (int j = 0; j < 260; j++)
+        for (int j = 0; j < 265; j++)
         {
             for (int k = 0; k < i * j; k++)
             {
@@ -55,6 +61,7 @@ int test_longo()
 
 int test_segmentation()
 {
+    set_time_limit(2);
     test_printf("Teste segmentation fault\n");
     *(int *)0 = 0;
     return 0;
@@ -62,6 +69,7 @@ int test_segmentation()
 
 int test_rapido()
 {
+    set_time_limit(2);
     test_printf("Teste for i < 5 (sem sleep)\n");
     for (int i = 0; i < 5; i++)
     {
@@ -71,6 +79,7 @@ int test_rapido()
 
 int test_lento()
 {
+    set_time_limit(2);
     test_printf("Teste for i < 5 (com sleep)\n");
     for (int i = 0; i < 5; i++)
     {
@@ -81,6 +90,7 @@ int test_lento()
 
 int test_prints()
 {
+    set_time_limit(2);
     for (int i = 0; i < 50; i++)
     {
         test_printf("varios prints\n");
@@ -90,6 +100,7 @@ int test_prints()
 
 int test_rand()
 {
+    set_time_limit(2);
     test_printf("Teste aleatório\n");
     srand(time(NULL));
     test_assert(rand() % 10 < 6, "Valor maior que 5");

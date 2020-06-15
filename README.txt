@@ -40,8 +40,8 @@ Rodando todos os testes:
     filho2 roda test2, etc.). Cada programa filho escreve a saída do programa em um
     arquivo temporário, cujo file descriptor é armazenado em um vetor de fds. 
 
-    Além disso, cada processo filho possui 2 segundos para completar o teste. Caso
-    não complete, o filho recebe um SIGALRM, terminando a execução dele.
+    Cada teste, quando criado, pode-se definir o tempo no qual o teste deve completar
+    sua execução pela chamada da função set_time_limit(f);
 
     As saídas dos processos filho padrão são:
 

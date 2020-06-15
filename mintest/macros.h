@@ -19,8 +19,13 @@ typedef struct
         if (!(expr))                                                                              \
         {                                                                                         \
             printf("%s: \033[0;35m[FAIL]\033[0m %s in %s:%d", __func__, str, __FILE__, __LINE__); \
-            return 1;                                                                             \
+            return -1;                                                                            \
         }                                                                                         \
+    }
+
+#define set_time_limit(f) \
+    {                     \
+        alarm(f);         \
     }
 
 #define TEST(f)                   \

@@ -10,25 +10,25 @@
 #include <fcntl.h>
 #include <time.h>
 
-// void sigint_handler(int num)
-// {
-//     printf("\nVocê deseja mesmo sair [s/n]? ");
-//     char c;
-//     scanf("%c", &c);
-//     if (c == 's')
-//     {
-//         exit(0);
-//     }
-// }
+int saved_stdout;
+int interrupt = 0;
+
+void sigint_handler(int num)
+{
+    dup2(saved_stdout, 1);
+    printf("\nVocê deseja mesmo sair [s/n]? ");
+    char c;
+    scanf("%c", &c);
+    printf("\n");
+    if (c == 's')
+    {
+        interrupt = 1;
+        // exit(0);
+    }
+}
 
 int main(int argc, char *argv[])
 {
-    // struct sigaction s;
-    // s.sa_handler = sigint_handler;
-    // sigemptyset(&s.sa_mask);
-    // s.sa_flags = 0;
-
-    // sigaction(SIGINT, &s, NULL);
 
     int size = sizeof(all_tests) / sizeof(test_data);
     int status, pass_count = 0;
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
     pid_t *filhos = malloc(sizeof(pid_t) * size);
     int *fd = malloc(sizeof(int) * size);
-    int saved_stdout = dup(1);
+    saved_stdout = dup(1);
 
     printf("Running %d tests:\n", size);
     printf("=====================\n\n");
@@ -90,21 +90,39 @@ int main(int argc, char *argv[])
         filhos[i] = filho;
     }
 
+    struct sigaction s;
+    s.sa_handler = sigint_handler;
+    sigemptyset(&s.sa_mask);
+    s.sa_flags = 0;
+
+    sigaction(SIGINT, &s, NULL);
+
+    sleep(2);
+    int j = 0;
+    while (interrupt && filhos[j])
+    {
+        kill(filhos[j], SIGINT);
+        j++;
+    }
     //espera todos os filhos terminarem e verifica o status de cada um
     int i = 0;
     while (waitpid(filhos[i], &status, 0) > 0)
     {
         dup2(fd[i], 1);
-        if (WTERMSIG(status) == 14)
-        {
-            printf("%s: \033[0;36m[TIME]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
-        }
-        else if (WIFSIGNALED(status))
-            printf("%s: \033[0;31m[ERRO]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
         if (WIFEXITED(status))
         {
             pass_count += !WEXITSTATUS(status);
+            i++;
+            continue;
         }
+
+        if (WTERMSIG(status) == 14)
+            printf("%s: \033[0;36m[TIME]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
+        else if (WTERMSIG(status) == 2 && interrupt)
+            printf("%s: \033[0;34m[STOP]\033[0m\n", all_tests[i].name);
+        else if (WIFSIGNALED(status))
+            printf("%s: \033[0;31m[ERRO]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
+
         i++;
     }
 

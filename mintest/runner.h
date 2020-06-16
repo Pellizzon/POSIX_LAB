@@ -23,7 +23,7 @@ void sigint_handler(int num)
     if (c == 's')
     {
         interrupt = 1;
-        // exit(0);
+        exit(0);
     }
 }
 
@@ -32,7 +32,6 @@ int main(int argc, char *argv[])
 
     int size = sizeof(all_tests) / sizeof(test_data);
     int status, pass_count = 0;
-    double start, stop;
 
     //Executa um único teste passado como argumento
     if (argc == 2)
@@ -88,6 +87,8 @@ int main(int argc, char *argv[])
             return 1;
         }
         filhos[i] = filho;
+
+        // kill(filho, SIGSTOP);
     }
 
     struct sigaction s;
@@ -97,13 +98,21 @@ int main(int argc, char *argv[])
 
     sigaction(SIGINT, &s, NULL);
 
-    sleep(2);
-    int j = 0;
-    while (interrupt && filhos[j])
-    {
-        kill(filhos[j], SIGINT);
-        j++;
-    }
+    // if (interrupt)
+    // {
+    //     for (int m = 0; m < size; m++)
+    //     {
+    //         kill(filhos[m], SIGINT);
+    //     }
+    // }
+    // else
+    // {
+    //     for (int m = 0; m < size; m++)
+    //     {
+    //         kill(filhos[m], SIGCONT);
+    //         printf("stop: %d\n", filhos[m]);
+    //     }
+    // }
     //espera todos os filhos terminarem e verifica o status de cada um
     int i = 0;
     while (waitpid(filhos[i], &status, 0) > 0)

@@ -57,11 +57,12 @@ Rodando todos os testes:
     =====================================================================================================================
 
     Se for pressionado ctrl+c, aparece uma mensagem pedindo confirmação se o usuário deseja sair (e ai começa a gambiarra...):
-    Quando pressionado, cada processo filho recebe um SIGSTOP (todos os filhos possuem o mesmo handler, que irá lançar esse sinal
-    para cada um). O processo pai, por sua vez, é responsável por mostrar a mensagem de confirmação e executar ações de acordo.
+    Quando pressionado, cada processo filho recebe um SIGSTOP (todos os filhos possuem o mesmo handler, 
+    que irá lançar esse sinal para cada um). O processo pai, por sua vez, é responsável por mostrar a mensagem de 
+    confirmação e executar ações de acordo.
 
-    No caso em que é digitado [s], todos os processos filhos recebem um sinal SIGCONT e em seguida SIGTERM, sendo assim finalizados
-    caso ainda estivessem rodando.
+    No caso em que é digitado [s], todos os processos filhos recebem um sinal SIGCONT e em seguida SIGTERM, 
+    sendo assim finalizados caso ainda estivessem rodando.
 
     No caso em que é digitado [n], todos os processos filhos recebem um sinal SIGCONT, e continuam sua execução.
 

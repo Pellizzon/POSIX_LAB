@@ -56,7 +56,7 @@ Rodando todos os testes:
 
     =====================================================================================================================
 
-    **Se for pressionado ctrl+c, aparece uma mensagem pedindo confirmação se o usuário deseja sair (e ai começa a gambiarra...):
+    Se for pressionado ctrl+c, aparece uma mensagem pedindo confirmação se o usuário deseja sair (e ai começa a gambiarra...):
     Quando pressionado, cada processo filho recebe um SIGSTOP (todos os filhos possuem o mesmo handler, que irá lançar esse sinal
     para cada um). O processo pai, por sua vez, é responsável por mostrar a mensagem de confirmação e executar ações de acordo.
 

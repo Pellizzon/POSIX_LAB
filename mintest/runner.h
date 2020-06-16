@@ -11,7 +11,8 @@
 #include <time.h>
 
 int saved_stdout;
-int interrupt = 0;
+int size;
+pid_t filhos[15];
 
 void sigint_handler(int num)
 {
@@ -22,15 +23,31 @@ void sigint_handler(int num)
     printf("\n");
     if (c == 's')
     {
-        interrupt = 1;
-        exit(0);
+        for (int m = 0; m < size; m++)
+        {
+            kill(filhos[m], SIGCONT);
+            kill(filhos[m], SIGTERM);
+        }
     }
+    else
+    {
+        for (int m = 0; m < size; m++)
+        {
+            kill(filhos[m], SIGCONT);
+        }
+        printf("\033[01;33mContinuando...\033[0m\n\n");
+        sleep(1);
+    }
+}
+
+void sigint_handler_child(int num)
+{
+    kill(getpid(), SIGSTOP);
 }
 
 int main(int argc, char *argv[])
 {
-
-    int size = sizeof(all_tests) / sizeof(test_data);
+    size = sizeof(all_tests) / sizeof(test_data);
     int status, pass_count = 0;
 
     //Executa um único teste passado como argumento
@@ -58,7 +75,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    pid_t *filhos = malloc(sizeof(pid_t) * size);
+    // pid_t *filhos = malloc(sizeof(pid_t) * size);
     int *fd = malloc(sizeof(int) * size);
     saved_stdout = dup(1);
 
@@ -72,13 +89,20 @@ int main(int argc, char *argv[])
 
         if (filho == 0)
         {
+            struct sigaction s;
+            s.sa_handler = sigint_handler_child;
+            sigemptyset(&s.sa_mask);
+            s.sa_flags = 0;
+            sigaction(SIGINT, &s, NULL);
+
             dup2(fd[i], 1);
             clock_t begin = clock();
+            kill(getpid(), SIGCONT);
             if (all_tests[i].function() >= 0)
             {
                 clock_t end = clock();
                 double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-                printf("%s: \033[0;32m[PASS]\033[0m (%lfs)\n", all_tests[i].name, time_spent);
+                printf("%s: \033[1;32m[PASS]\033[0m (%lfs)\n", all_tests[i].name, time_spent);
                 return 0;
             }
             clock_t end = clock();
@@ -87,8 +111,6 @@ int main(int argc, char *argv[])
             return 1;
         }
         filhos[i] = filho;
-
-        // kill(filho, SIGSTOP);
     }
 
     struct sigaction s;
@@ -97,23 +119,8 @@ int main(int argc, char *argv[])
     s.sa_flags = 0;
 
     sigaction(SIGINT, &s, NULL);
+    sleep(2);
 
-    // if (interrupt)
-    // {
-    //     for (int m = 0; m < size; m++)
-    //     {
-    //         kill(filhos[m], SIGINT);
-    //     }
-    // }
-    // else
-    // {
-    //     for (int m = 0; m < size; m++)
-    //     {
-    //         kill(filhos[m], SIGCONT);
-    //         printf("stop: %d\n", filhos[m]);
-    //     }
-    // }
-    //espera todos os filhos terminarem e verifica o status de cada um
     int i = 0;
     while (waitpid(filhos[i], &status, 0) > 0)
     {
@@ -126,11 +133,11 @@ int main(int argc, char *argv[])
         }
 
         if (WTERMSIG(status) == 14)
-            printf("%s: \033[0;36m[TIME]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
-        else if (WTERMSIG(status) == 2 && interrupt)
-            printf("%s: \033[0;34m[STOP]\033[0m\n", all_tests[i].name);
+            printf("%s: \033[1;36m[TIME]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
+        else if (WTERMSIG(status) == 15)
+            printf("%s: \033[1;34m[STOP]\033[0m\n", all_tests[i].name);
         else if (WIFSIGNALED(status))
-            printf("%s: \033[0;31m[ERRO]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
+            printf("%s: \033[1;31m[ERRO]\033[0m %s\n", all_tests[i].name, strsignal(WTERMSIG(status)));
 
         i++;
     }

@@ -51,14 +51,32 @@ Rodando todos os testes:
     Além disso, é indicado o tempo levado para a execução do teste, que é impresso
     logo após o status/mensagem de por que falhou.
 
-    ale destacar ainda, que no processo pai, os pids dos processos filhos são armazenados em um 
+    Vale destacar ainda, que no processo pai, os pids dos processos filhos são armazenados em um 
     vetor de filhos.
+
+    =====================================================================================================================
+
+    **Se for pressionado ctrl+c, aparece uma mensagem pedindo confirmação se o usuário deseja sair (e ai começa a gambiarra...):
+    Quando pressionado, cada processo filho recebe um SIGSTOP (todos os filhos possuem o mesmo handler, que irá lançar esse sinal
+    para cada um). O processo pai, por sua vez, é responsável por mostrar a mensagem de confirmação e executar ações de acordo.
+
+    No caso em que é digitado [s], todos os processos filhos recebem um sinal SIGCONT e em seguida SIGTERM, sendo assim finalizados
+    caso ainda estivessem rodando.
+
+    No caso em que é digitado [n], todos os processos filhos recebem um sinal SIGCONT, e continuam sua execução.
+
+    Em seguida, o fluxo do processo pai continua. Se ctrl+c não for pressionado, a parte anterior é irrelevante...
+    
+    Obs.: no caso em que é digitado não, o teste que demora mas termina está recebendo alarme na maioria das vezes, 
+    poucos foram os casos em que ele passou...
+    
+    =====================================================================================================================
 
     O processo pai espera o término de cada um dos seus filhos, e para cada filho:
 
         - espera finalização de sua execução e obtem seu status.
-        - Caso possui algum erro, escreve no arquivo temporario desse filho (por isso
-        o vetor com os fds) o erro.
+        - Caso possui algum erro, escreve no arquivo temporario desse filho o erro
+        (por isso o vetor com os fds).
         - Caso não possua nenhum erro, o programa recebe o valor de saída (0 ou 1) e realiza ações
         de acordo:
             - se recebeu 0, o teste rodado por aquele filho passou, incrementando uma váriavel de passe;
@@ -74,4 +92,5 @@ Rodando todos os testes:
         [PASS]: verde;
         [FAIL]: magenta;
         [ERRO]: vermelho;
-        [TIME]: ciano.
+        [TIME]: ciano;
+        [STOP]: azul.

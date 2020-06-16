@@ -18,7 +18,7 @@ typedef struct
     {                                                                                             \
         if (!(expr))                                                                              \
         {                                                                                         \
-            printf("%s: \033[0;35m[FAIL]\033[0m %s in %s:%d", __func__, str, __FILE__, __LINE__); \
+            printf("%s: \033[1;35m[FAIL]\033[0m %s in %s:%d", __func__, str, __FILE__, __LINE__); \
             return -1;                                                                            \
         }                                                                                         \
     }

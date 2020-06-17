@@ -30,7 +30,7 @@ int test3()
 int test_div0()
 {
     set_time_limit(2);
-    test_printf("Teste divisão por zero\n");
+    test_printf("Test division by zero\n");
     int i = 1 / 0;
     return 0;
 }
@@ -38,16 +38,16 @@ int test_div0()
 int test_loop()
 {
     set_time_limit(2);
-    test_printf("Teste loop\n");
+    test_printf("Test loop\n");
     while (1)
         ;
     return 0;
 }
 
-int test_longo()
+int test_long()
 {
     set_time_limit(2);
-    test_printf("Teste bem longo que termina\n");
+    test_printf("Long test. It should finish\n");
     for (int i = 0; i < 250; i++)
     {
         for (int j = 0; j < 250; j++)
@@ -63,25 +63,25 @@ int test_longo()
 int test_segmentation()
 {
     set_time_limit(2);
-    test_printf("Teste segmentation fault\n");
+    test_printf("Test segmentation fault\n");
     *(int *)0 = 0;
     return 0;
 }
 
-int test_rapido()
+int fast_test()
 {
     set_time_limit(2);
-    test_printf("Teste for i < 5 (sem sleep)\n");
+    test_printf("Test for i < 5 (w/o sleep)\n");
     for (int i = 0; i < 5; i++)
     {
     }
     return 0;
 }
 
-int test_lento()
+int slow_test()
 {
     set_time_limit(2);
-    test_printf("Teste for i < 5 (com sleep)\n");
+    test_printf("Test for i < 5 (w/ sleep)\n");
     for (int i = 0; i < 5; i++)
     {
         sleep(1);
@@ -94,7 +94,7 @@ int test_prints()
     set_time_limit(2);
     for (int i = 0; i < 50; i++)
     {
-        test_printf("varios prints\n");
+        test_printf("Lots of prints %d\n", i);
     }
     return 0;
 }
@@ -102,14 +102,14 @@ int test_prints()
 int test_rand()
 {
     set_time_limit(2);
-    test_printf("Teste aleatório\n");
+    test_printf("Random test\n");
     srand(time(NULL));
-    test_assert(rand() % 10 < 6, "Valor maior que 5");
+    test_assert(rand() % 10 < 6, "Value bigger than 5");
     return 0;
 }
 
 test_list = {TEST(test_prints), TEST(test1), TEST(test2), TEST(test3), TEST(test_div0),
-             TEST(test_loop), TEST(test_longo), TEST(test_segmentation),
-             TEST(test_rapido), TEST(test_lento), TEST(test_rand)};
+             TEST(test_loop), TEST(test_long), TEST(test_segmentation),
+             TEST(fast_test), TEST(slow_test), TEST(test_rand)};
 
 #include "mintest/runner.h"

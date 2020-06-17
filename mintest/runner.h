@@ -12,30 +12,34 @@
 
 int saved_stdout;
 int size;
-pid_t filhos[15];
+pid_t childs[15];
 
 void sigint_handler(int num)
 {
     dup2(saved_stdout, 1);
-    printf("\nVocê deseja mesmo sair [s/n]? ");
+    printf("\nAre you sure you want to exit [y/n]? ");
     char c;
     scanf("%c", &c);
     printf("\n");
-    if (c == 's')
+    if (c == 'y')
     {
         for (int m = 0; m < size; m++)
         {
-            kill(filhos[m], SIGCONT);
-            kill(filhos[m], SIGTERM);
+            kill(childs[m], SIGCONT);
+            /*eu sei que SIGTERM não é a mesma coisa que SIGINT,
+            mas é usado aqui porque não pode ser ignorado e funciona.
+            SIGINT, mesmo voltando ele para o default, estava dando
+            problema e rodava todos os testes*/
+            kill(childs[m], SIGTERM);
         }
     }
     else
     {
         for (int m = 0; m < size; m++)
         {
-            kill(filhos[m], SIGCONT);
+            kill(childs[m], SIGCONT);
         }
-        printf("\033[01;33mContinuando...\033[0m\n\n");
+        printf("\033[01;33mContinuing...\033[0m\n\n");
         sleep(1);
     }
 }
@@ -75,7 +79,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    // pid_t *filhos = malloc(sizeof(pid_t) * size);
     int *fd = malloc(sizeof(int) * size);
     saved_stdout = dup(1);
 
@@ -85,9 +88,9 @@ int main(int argc, char *argv[])
     for (int i = 0; i < size; i++)
     {
         fd[i] = open("/tmp", O_RDWR | O_TMPFILE);
-        pid_t filho = fork();
+        pid_t child = fork();
 
-        if (filho == 0)
+        if (child == 0)
         {
             struct sigaction s;
             s.sa_handler = sigint_handler_child;
@@ -97,7 +100,7 @@ int main(int argc, char *argv[])
 
             dup2(fd[i], 1);
             clock_t begin = clock();
-            kill(getpid(), SIGCONT);
+
             if (all_tests[i].function() >= 0)
             {
                 clock_t end = clock();
@@ -110,7 +113,7 @@ int main(int argc, char *argv[])
             printf(" (%lfs)\n", time_spent);
             return 1;
         }
-        filhos[i] = filho;
+        childs[i] = child;
     }
 
     struct sigaction s;
@@ -122,7 +125,7 @@ int main(int argc, char *argv[])
     sleep(2);
 
     int i = 0;
-    while (waitpid(filhos[i], &status, 0) > 0)
+    while (waitpid(childs[i], &status, 0) > 0)
     {
         dup2(fd[i], 1);
         if (WIFEXITED(status))
@@ -158,5 +161,8 @@ int main(int argc, char *argv[])
 
     printf("\n=====================\n");
     printf("%d/%d tests passed\n", pass_count, size);
+
+    close(saved_stdout);
+
     return 0;
 }

@@ -48,9 +48,9 @@ int test_long()
 {
     set_time_limit(2);
     test_printf("Long test. It should finish\n");
-    for (int i = 0; i < 250; i++)
+    for (int i = 0; i < 265; i++)
     {
-        for (int j = 0; j < 250; j++)
+        for (int j = 0; j < 265; j++)
         {
             for (int k = 0; k < i * j; k++)
             {

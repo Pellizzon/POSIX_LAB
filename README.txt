@@ -61,10 +61,11 @@ Rodando todos os testes:
     que irá lançar esse sinal para cada um). O processo pai, por sua vez, é responsável por mostrar a mensagem de 
     confirmação e executar ações de acordo.
 
-    No caso em que é digitado [s], todos os processos filhos recebem um sinal SIGCONT e em seguida SIGTERM, 
+    No caso em que é digitado [y], todos os processos filhos recebem um sinal SIGCONT e em seguida SIGTERM, 
     sendo assim finalizados caso ainda estivessem rodando.
 
-    No caso em que é digitado [n], todos os processos filhos recebem um sinal SIGCONT, e continuam sua execução.
+    No caso em que é digitado [n] (ou qualquer outra coisa que não seja
+    [y]), todos os processos filhos recebem um sinal SIGCONT, e continuam sua execução.
 
     Em seguida, o fluxo do processo pai continua. Se ctrl+c não for pressionado, a parte anterior é irrelevante...
     

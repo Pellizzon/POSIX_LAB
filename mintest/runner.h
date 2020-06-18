@@ -52,7 +52,6 @@ void sigint_handler_child(int num)
 int main(int argc, char *argv[])
 {
     size = sizeof(all_tests) / sizeof(test_data);
-    int status, pass_count = 0;
 
     //Executa um único teste passado como argumento
     if (argc == 2)
@@ -81,6 +80,7 @@ int main(int argc, char *argv[])
 
     int *fd = malloc(sizeof(int) * size);
     childs = malloc(sizeof(pid_t) * size);
+    int status, pass_count = 0;
     saved_stdout = dup(1);
 
     printf("Running %d tests:\n", size);

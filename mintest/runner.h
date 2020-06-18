@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
                 {
                     clock_t end = clock();
                     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-                    printf("%s: \033[0;32m[PASS]\033[0m (%lfs)\n", all_tests[i].name, time_spent);
+                    printf("%s: \033[1;32m[PASS]\033[0m (%lfs)\n", all_tests[i].name, time_spent);
                     return 0;
                 }
                 clock_t end = clock();

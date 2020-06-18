@@ -12,7 +12,7 @@
 
 int saved_stdout;
 int size;
-pid_t childs[15];
+pid_t *childs;
 
 void sigint_handler(int num)
 {
@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
     }
 
     int *fd = malloc(sizeof(int) * size);
+    childs = malloc(sizeof(pid_t) * size);
     saved_stdout = dup(1);
 
     printf("Running %d tests:\n", size);

@@ -3,16 +3,25 @@ Implementação dos testes:
 Cada um dos testes tem o nome ao caso que se refere, ou são apenas testes aleatórios para
 verficar se passa ou não.
 
+- O test1 realiza print e retorna 0, sempre deve passar;
+- O test2 realiza alguns asserts, os primeiros passam, até chegar no primeiro 
+que falha. Tudo que está abaixo da linha que falhou não é rodado;
+- O test3 só demonstra o uso de um test_printf seguido de um test_assert que passa;
 - O test_div0 faz divisão por 0;
 - O test_loop trava o programa em um loop infinito;
-- O test_longo faz muito trabalho, mas eventualmente passa no teste 
+- O test_long faz muito trabalho, mas eventualmente passa no teste 
 (demora menos de 2s);
 - O test_segmentation causa segmentation fault;
-- O test_rapido é uma simples execução de um for que não faz nada;
-- O test_lento é uma simples execução de um for que não faz nada, porém
+- O fast_test é uma simples execução de um for que não faz nada;
+- O slow_test é uma simples execução de um for que não faz nada, porém
 com sleeps a cada iteração, dando a ideia de "lento";
+- O test_prints realiza 50 prints (bom para demonstrar saída organizada dos prints);
 - O test_rand gera um número aleatório e verifica a condição escolhida, 
 esse teste pode passar ou falhar toda vez que rodado o programa.
+
+Os testes estão no arquivo example.c. Para executá-los, basta compilar o programa e rodá-lo:
+
+    gcc example.c -o example && ./example
 
 Implementação runner:
 
@@ -26,19 +35,24 @@ Para o teste especificado:
     - verifica se argc é igual a 2 ("./programa" e "teste a ser rodado");
     - se não for igual a dois (ou seja não passar argumento ou passar mais de 
     um argumento), todos os testes são rodados;
-    - se não for igual a 2, apenas o teste passado como argumento:
+    - se for igual a 2, apenas o teste passado como argumento será executado:
 
-        verifica-se a string argumento e a compara com o nome dos testes num for,
+        verifica-se a string argumento e a compara com o nome dos testes em um for,
         executando apenas aquela que possui nome = argumento.
 
         Indica se o teste falhou, passou, time_out ou erro e retorna 0, indicando
         o fim do programa.
 
+Para rodar o teste especificado, basta compilar o programa e passar qual teste será
+executado:
+
+    gcc example.c -o example && ./example test_rand
+
 Rodando todos os testes: 
     São criados vários forks do programa principal, por meio de um for, 
-    no qual cada processo filho irá rodar um teste diferente (filho1 roda test1,
-    filho2 roda test2, etc.). Cada programa filho escreve a saída do programa em um
-    arquivo temporário, cujo file descriptor é armazenado em um vetor de fds. 
+    no qual cada processo filho irá rodar um teste diferente (filho1 roda primeiroteste de test_list, 
+    filho 2 o segundo, etc.). Cada programa filho escreve a saída do programa em um
+    arquivo temporário, cujo file descriptor é armazenado em um vetor de file descriptors (fds). 
 
     Cada teste, quando criado, pode-se definir o tempo no qual o teste deve completar
     sua execução pela chamada da função set_time_limit(f);
@@ -56,7 +70,7 @@ Rodando todos os testes:
 
     =====================================================================================================================
 
-    Se for pressionado ctrl+c, aparece uma mensagem pedindo confirmação se o usuário deseja sair (e ai começa a gambiarra...):
+    Se for pressionado ctrl+c, aparece uma mensagem pedindo confirmação se o usuário deseja sair:
     Quando pressionado, cada processo filho recebe um SIGSTOP (todos os filhos possuem o mesmo handler, 
     que irá lançar esse sinal para cada um). O processo pai, por sua vez, é responsável por mostrar a mensagem de 
     confirmação e executar ações de acordo.
@@ -69,8 +83,8 @@ Rodando todos os testes:
 
     Em seguida, o fluxo do processo pai continua. Se ctrl+c não for pressionado, a parte anterior é irrelevante...
     
-    Obs.: no caso em que é digitado não, o teste que demora mas termina está recebendo alarme na maioria das vezes, 
-    poucos foram os casos em que ele passou...
+    Obs.: no caso em que é digitado algo diferente de [y], o teste que demora mas termina (test_long) está recebendo 
+    alarme na maioria das vezes, poucos foram os casos em que ele passou quando eu testava...
     
     =====================================================================================================================
 
@@ -87,8 +101,8 @@ Rodando todos os testes:
     Após agregar todos os resultados em seus respectivos arquivos temporários, o programa lê cada um desses
     arquivos e imprime no terminal, de maneira ordenada, os resultados dos testes obtidos anteriormente:
 
-        teste_*: prints...
-        teste_*: [STATUS]
+        test_*: prints...
+        test_*: [STATUS]
 
     Ainda, cada um dos status é impresso com uma cor diferente:
         [PASS]: verde;

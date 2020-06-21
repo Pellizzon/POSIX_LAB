@@ -13,6 +13,8 @@ int test2()
 {
     set_time_limit(2);
     test_assert(1 < 2, "This should pass");
+    test_assert(5 > 2, "This should pass");
+    test_assert(0 == 0, "This should pass");
     test_assert(1 == 0, "This always fails!");
     printf("This never runs!\n");
     test_assert(1 == 1, "Neither this.");
